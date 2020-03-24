@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import scipy.stats as sp
-import scipy.integrate as odeint
+from scipy.integrate import odeint
 from scipy.optimize import curve_fit
 
 data = pd.read_excel("../data/Bacteria_data.xlsx")
@@ -121,4 +121,25 @@ for i in range(32,41):
     k_guess_list.append(k_guess_at_i)
 
 k_guess = np.average(k_guess_list)
-print(k_guess)
+
+
+
+#################### Section 5: curve_fit
+
+init_y = [x_val_avg_y[x_vals[0]], 0.2]
+
+def diff_n_p(x, t, gmax, k, mu, a):
+    n, row = x
+    dndp = [(n*gmax*row)/(row+k) - (n*mu), (-a)*(n*gmax*row)/(row+k)]    
+    return dndp
+
+def log_diff(t, g_max_guess, k_guess, m1, a_guess):    
+    return np.log(odeint(diff_n_p, init_y, t, args=(g_max_guess, k_guess, m1, a_guess)).flatten())
+
+
+y_vals_avg = list(x_val_avg_y.values())
+x_vals_unique = list(x_val_avg_y.keys())
+
+print(len(y_vals_avg), len(x_vals_unique))
+g_max, k, mu, a = curve_fit(log_diff, x_vals_unique, np.log(y_vals_avg), p0=(g_max_guess, k_guess, m1, a_guess))[0]
+print(g_max, k, mu, a)
