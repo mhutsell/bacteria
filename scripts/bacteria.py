@@ -107,7 +107,7 @@ nutrient_concentration_x = set(x_vals)
 nutrient_dict = {}
 for x in nutrient_concentration_x:
     if x > 40:
-        nutrient_dict[x] = 0
+        nutrient_dict[x] = 0.001
     else:
         nutrient_dict[x] = 0.2 - float(x_val_avg_y[x]) / a_guess
 pprint.pprint(nutrient_dict)
@@ -134,14 +134,14 @@ def diff_n_p(x, t, gmax, k, mu, a):
     return dndp
 
 def log_diff(t, g_max_guess, k_guess, m1, a_guess):    
-    return np.log(odeint(diff_n_p, init_y, t, args=(g_max_guess, k_guess, m1, a_guess)))
+    return np.log(odeint(diff_n_p, init_y, t, args=(g_max_guess, k_guess, m1, a_guess))).flatten()
 
 
-y_vals_avg = list(x_val_avg_y.values())
-x_vals_unique = list(x_val_avg_y.keys())
-y_log_np = np.log(y_vals_avg)
-x_np = np.array(x_vals_unique)
-print(len(x_np), len(y_log_np), len(np.log(y_vals_avg)))
+pop_log_np = np.log(np.array(list(x_val_avg_y.values())))
+row_log_np = np.log(np.array(list(nutrient_dict.values())))
+y_vals = np.array([pop_log_np, row_log_np]).transpose()
 
-g_max, k, mu, a = curve_fit(log_diff, x_np, y_log_np, p0=(g_max_guess, k_guess, m1, a_guess))[0]
+x_np = np.array(list(x_val_avg_y.keys()))
+
+g_max, k, mu, a = curve_fit(log_diff, x_np, y_vals.flatten(), p0=(g_max_guess, k_guess, m1, a_guess))[0]
 print(g_max, k, mu, a)
