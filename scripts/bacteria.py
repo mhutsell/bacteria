@@ -134,12 +134,14 @@ def diff_n_p(x, t, gmax, k, mu, a):
     return dndp
 
 def log_diff(t, g_max_guess, k_guess, m1, a_guess):    
-    return np.log(odeint(diff_n_p, init_y, t, args=(g_max_guess, k_guess, m1, a_guess)).flatten())
+    return np.log(odeint(diff_n_p, init_y, t, args=(g_max_guess, k_guess, m1, a_guess)))
 
 
 y_vals_avg = list(x_val_avg_y.values())
 x_vals_unique = list(x_val_avg_y.keys())
+y_log_np = np.log(y_vals_avg)
+x_np = np.array(x_vals_unique)
+print(len(x_np), len(y_log_np), len(np.log(y_vals_avg)))
 
-print(len(y_vals_avg), len(x_vals_unique))
-g_max, k, mu, a = curve_fit(log_diff, x_vals_unique, np.log(y_vals_avg), p0=(g_max_guess, k_guess, m1, a_guess))[0]
+g_max, k, mu, a = curve_fit(log_diff, x_np, y_log_np, p0=(g_max_guess, k_guess, m1, a_guess))[0]
 print(g_max, k, mu, a)
