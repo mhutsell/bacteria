@@ -66,7 +66,7 @@ print(g_max_guess)
 # so we can approximate 'a' by taking 2e8 and dividing it by 0.2. This will
 # tell us how many bacteria one microgram/ml creates.
 
-a_guess = np.max(y_vals) / 0.2
+a_guess = 0.2 / np.max(y_vals)
 print(a_guess)
 pprint.pprint(x_vals)
 #################### Section 4: Approximating nutrient decay
@@ -110,7 +110,7 @@ for x in nutrient_concentration_x:
     if x > 40:
         nutrient_dict[x] = 0.001
     else:
-        nutrient_dict[x] = 0.2 - float(x_val_avg_y[x]) / a_guess
+        nutrient_dict[x] = 0.2 - float(x_val_avg_y[x]) * a_guess
 pprint.pprint(nutrient_dict)
 
 
@@ -124,6 +124,10 @@ for i in range(32,41):
 k_guess = np.average(k_guess_list)
 
 
+# other nutrient dict w/ full values:
+nut_list_2 = []
+for i,x in enumerate(x_vals):
+    nut_list_2.append(0.2 - y_vals[i] * a_guess)
 
 #################### Section 5: curve_fit
 
@@ -139,7 +143,6 @@ def log_diff(t, g_max_guess, k_guess, m1, a_guess):
     for i, x in enumerate(result):
         if x <= 0:
             result[i] = 0.001
-    print(result)
     return np.log(result)
 
 
@@ -152,3 +155,12 @@ x_np = np.array(list(x_val_avg_y.keys()))
 g_max, k, mu, a = curve_fit(log_diff, x_np, y_vals.flatten(), p0=(g_max_guess, k_guess, m1, a_guess))[0]
 print(g_max, k, mu, a)
 print(g_max_guess, k_guess, m1, a_guess)
+
+
+t = np.arange(4.5,150.1,0.1)
+def modeling(x, t):
+    n, row = x
+    dndp = [(n*g_max*row)/(row+k) - (n*mu), (-a)*(n*g_max*row)/(row+k)]
+    return dndp
+
+result_1 = odeint(modeling, init_y, t)
