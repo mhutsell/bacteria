@@ -68,7 +68,7 @@ print(g_max_guess)
 
 a_guess = 0.2 / np.max(y_vals)
 print(a_guess)
-pprint.pprint(x_vals)
+
 #################### Section 4: Approximating nutrient decay
 
 
@@ -84,7 +84,6 @@ for i, x in enumerate(x_vals):
     x_val_avg_y[x] += y_vals[i]
 
 for x in set(x_vals):
-    print(len([y for y in x_vals if y == x]))
     x_val_avg_y[x] /= len([y for y in x_vals if y == x])
 
 # =============================================================================
@@ -111,7 +110,6 @@ for x in nutrient_concentration_x:
         nutrient_dict[x] = 0.001
     else:
         nutrient_dict[x] = 0.2 - float(x_val_avg_y[x]) * a_guess
-pprint.pprint(nutrient_dict)
 
 
 approx_row_d = [(y_vals[i+1]- y_vals[i]) for i in range(0,51)]
