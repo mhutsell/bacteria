@@ -236,6 +236,9 @@ plt.figure()
 plt.plot(x_vals, y_vals, 'ro', label='Original data', markersize=4)
 plt.plot(xplot, g+b*xplot+c*xplot**2+d*xplot**3+e*xplot**4+f*xplot**5, 'b', label='Fitted line')
 plt.legend(loc=1)
+plt.xlabel("Time (Hours)")
+plt.ylabel("Bacteria Population (CFU/ml)")
+plt.title("5th-Order Polynomial Fit on Data")
 plt.show()
 
 
@@ -249,6 +252,9 @@ plt.figure()
 plt.plot(x_vals, y_vals, 'ro', label='Original data', markersize=4)
 plt.plot(xplot, a2+b2*xplot+c2*xplot**2+d2*xplot**3+e2*xplot**4+f2*xplot**5+g2*xplot**6+h2*xplot**7+i2*xplot**8+j2*xplot**9+k2*xplot**10, 'b', label='Fitted line')
 plt.legend(loc=1)
+plt.xlabel("Time (Hours)")
+plt.ylabel("Bacteria Population (CFU/ml)")
+plt.title("10th-Order Polynomial Fit on Data")
 plt.show()
 
 # We did 5th order and 10th order just to show that both did poorly outside of the data range.
