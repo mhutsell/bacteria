@@ -62,7 +62,7 @@ plt.ylabel("log(bacterial concentration) (CFU/ml)")
 
 m1 *= -1 # Our calculated m1 is negative, which is correct, but in our differential equation, we subtract
          # n(mu). Therefore, to avoid two negatives becoming a positive, I make m1 a positive value by multiplying
-         # by negative 1. 
+         # by negative 1. Mu units: (1/hour)
 print("Mu guess: {}".format(m1))
 
 
@@ -98,7 +98,7 @@ plt.xlabel("Time (Hours)")
 plt.ylabel("log(bacterial concentration) (CFU/ml)")
 
 g_max_guess = m2+m1 # m2 = gmax - mu, so to find our gmax guess, we must add our mu guess (m1)
-print("Gmax Guess: {}".format(g_max_guess)) # Our gmax guess
+print("Gmax Guess: {}".format(g_max_guess)) # Our gmax guess. Gmax units: 1/hour
 
 
 #################### Section 3: Finding a
@@ -109,7 +109,7 @@ print("Gmax Guess: {}".format(g_max_guess)) # Our gmax guess
 # tell us how many bacteria one microgram/ml creates.
 
 a_guess = 0.2 / np.max(y_vals)
-print("'a' Guess: {}".format(a_guess)) # Our 'a' guess
+print("'a' Guess: {}".format(a_guess)) # Our 'a' guess. 'a' units: μg/mL
 
 
 #################### Section 4: Approximating nutrient decay due to bacterial growth
@@ -149,6 +149,7 @@ for x in nutrient_concentration_x:
                                                                  # by looking at the average y value for that x value
                                                                  # and using our "a_guess" to approximate how much nutrient
                                                                  # had been used to create the bacteria up to that point.
+                                                                 # Nutrient units: μg/mL
 
 approx_conc_d = [(y_vals[i+1]- y_vals[i]) for i in range(0,51)] # approximate derivative of bact. concentration by subtracting the 
                                                                 # current point from the following point. 
@@ -162,12 +163,12 @@ for i in range(32,41):
     k_guess_list.append(k_guess_at_i)
 
 # We then get our K guess by averaging all of the K guesses that we made within the 'for' loop above.
-k_guess = np.average(k_guess_list)
+k_guess = np.average(k_guess_list) # K units: μg/mL
 print("K Guess: {}".format(k_guess))
 
 #################### Section 5: curve_fit
 
-init_y = [x_val_avg_y[x_vals[0]], 0.2] # Our initial values for our data. ro = 0.2 (microgram/ml),
+init_y = [x_val_avg_y[x_vals[0]], 0.2] # Our initial values for our data. ro = 0.2 (μg/mL),
                                        # bacterial concentration = 35 (CFU/ml)
 
 # This is our differential equation for bacterial concentration and ro
@@ -219,6 +220,15 @@ def modeling(x, t):
 result_1 = odeint(modeling, init_y, t) # our resulting bact. conc. values and ro values given 
                                        # our initial y values as initialized earlier
 bacterial_result = [x[0] for x in result_1] # so that we have just the bacterial concentration values
+
+# Plotting our odeint resulting bacterial concentration results over original data points to make sure it's reasonable
+plt.figure()
+plt.plot(t[:956], bacterial_result[:956], label = "ODEINT") # so that we only plot until hours = 100
+plt.plot(x_vals, y_vals, 'ro', label='Original data', markersize=4)
+plt.xlabel("Time (Hours)")
+plt.ylabel("Bacteria Population (CFU/ml)")
+plt.title("ODEINT Model over Original Data")
+
 
 # Fitting a 5th order polynomial
 # creating our 52 x 6 matrix to apply least square regression to.
