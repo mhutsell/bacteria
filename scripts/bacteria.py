@@ -152,7 +152,9 @@ for x in nutrient_concentration_x:
                                                                  # Nutrient units: μg/mL
 
 approx_conc_d = [(y_vals[i+1]- y_vals[i]) for i in range(0,51)] # approximate derivative of bact. concentration by subtracting the 
-                                                                # current point from the following point. 
+                                                                # current point from the following point.
+                                                                # Really bad approximation as the distance between points isn't even,
+                                                                # but it's just for the guess.
 approx_conc_d +=[approx_conc_d[50]] # so that we can have 52 values
 k_guess_list = []
 
