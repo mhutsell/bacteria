@@ -6,8 +6,6 @@ Created on Mon Mar  2 14:39:43 2020
 @authors: Mack
 """
 
-import pprint
-import math
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -240,7 +238,7 @@ g, b, c, d, e, f = np.linalg.lstsq(A, y_vals, rcond=None)[0] #least squares solu
 # We use g here because a has already been assigned to our fitted value for a. 
 
 # We allow for some room around where our data points lie so that we can see part of the polynomial's behavior 
-# outside of the data points. That's why we have x values from -10 to 110. 
+# outside of the data points. That's why we have x values from -10 to 110 
 xplot = np.arange(-10, 110)
 
 # In this figure we plot our 5th-order polynomial fit over our original data points so that we can see how well it fit.
