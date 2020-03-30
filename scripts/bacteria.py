@@ -239,7 +239,7 @@ g, b, c, d, e, f = np.linalg.lstsq(A, y_vals, rcond=None)[0] #least squares solu
 
 # We allow for some room around where our data points lie so that we can see part of the polynomial's behavior 
 # outside of the data points. That's why we have x values from -10 to 110 
-xplot = np.arange(-10, 110)
+xplot = np.arange(3.5, 101,0.1)
 
 # In this figure we plot our 5th-order polynomial fit over our original data points so that we can see how well it fit.
 plt.figure()
