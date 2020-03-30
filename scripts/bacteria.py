@@ -216,7 +216,9 @@ def modeling(x, t):
     dndp = [(n*g_max*row)/(row+k) - (n*mu), (-a)*(n*g_max*row)/(row+k)] # same as in diff_n_p 
     return dndp
 
-result_1 = odeint(modeling, init_y, t) # our resulting y values given our initial y values as initialized earlier
+result_1 = odeint(modeling, init_y, t) # our resulting bact. conc. values and ro values given 
+                                       # our initial y values as initialized earlier
+bacterial_result = [x[0] for x in result_1] # so that we have just the bacterial concentration values
 
 # Fitting a 5th order polynomial
 # creating our 52 x 6 matrix to apply least square regression to.
@@ -256,7 +258,7 @@ plt.show()
 # This first figure is our ODEINT model (over 150 hours) over our original data points to see if it behaves reasonably
 # beyond the scope of our given data domain.
 plt.figure()
-plt.plot(t, result_1, label = "ODEINT")
+plt.plot(t, bacterial_result, label = "ODEINT")
 plt.plot(x_vals, y_vals, 'ro', label='Original data', markersize=4)
 plt.xlabel("Time (Hours)")
 plt.ylabel("Bacteria Population (CFU/ml)")
