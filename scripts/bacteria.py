@@ -22,7 +22,7 @@ data = pd.read_excel("../data/Bacteria_data.xlsx") # The file path here will hav
                                                    # to do it here. The excel sheet will be attached in our email.
                                                    # The organization of the files will also be on github.
 
-data.plot(kind = "scatter", x = "X", y="Y") # Scatter plot our experimental data. This corresponds to Figure 2.
+data.plot(kind = "scatter", x = "X", y="Y") # Scatter plot our experimental data.
 plt.title("Given Data: Bacterial Concentration vs Time (Hours)")
 plt.xlabel("Time (Hours)")
 plt.ylabel("Bacterial Concentration (CFU/ml")
