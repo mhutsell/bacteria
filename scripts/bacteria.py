@@ -3,7 +3,7 @@
 """
 Created on Mon Mar  2 14:39:43 2020
 
-@authors: Mack
+@authors: Mack, Camilla, Matthew
 """
 
 import matplotlib.pyplot as plt
