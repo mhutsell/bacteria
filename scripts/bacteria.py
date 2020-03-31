@@ -9,9 +9,11 @@ Created on Mon Mar  2 14:39:43 2020
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import random
 import scipy.stats as sp
 from scipy.integrate import odeint
 from scipy.optimize import curve_fit
+from sklearn.metrics import r2_score
 
 data = pd.read_excel("../data/Bacteria_data.xlsx") # The file path here will have to be the same on your computer or
                                                    # the code will have an error. I formatted my excel sheet to have
@@ -49,14 +51,19 @@ plt.title("Log Y Values vs X values 40-51")
 plt.xlabel("Time (Hours)")
 plt.ylabel("log(bacterial concentration) (CFU/ml)")
 
+# Small note on graphs: Where calculating r^2 is desirable, I have written it as an option but not enabled it.
+# it should only take removing a few '#'s and parentheses and quotes and such to get it working if you want.
+
 # Plot guessed y values vs x values for x values 40-51. Guessed y values are guesses of log(bacterial concentration).
 # Guesses are made using m1 and b1 as previously calculated.
 plt.figure()
 y_vals_guessed_at_1 = [m1*x + b1 for x in x_vals_1] # Guess Y values 40-51 based on our mu_guess.
 plt.plot(x_vals_1, y_vals_guessed_at_1, 'ro', color = "blue")
-plt.title("Guessed Log Y Values vs X Values 40-51")
+#r2_1 = r2_score(y_vals_1, y_vals_guessed_at_1)
+plt.title("Guessed Log Y Values vs X Values 40-51") #r^2 = {}".format(round(r2_1, 2)))
 plt.xlabel("Time (Hours)")
 plt.ylabel("log(bacterial concentration) (CFU/ml)")
+
 
 m1 *= -1 # Our calculated m1 is negative, which is correct, but in our differential equation, we subtract
          # n(mu). Therefore, to avoid two negatives becoming a positive, I make m1 a positive value by multiplying
@@ -91,7 +98,8 @@ plt.ylabel("log(bacterial concentration) (CFU/ml)")
 plt.figure()
 y_vals_guessed_at_2 = [m2*x + b2 for x in x_vals_2]
 plt.plot(x_vals_2, y_vals_guessed_at_2, 'ro', color = "blue")
-plt.title("Guessed Log Y Values vs X Values 0-31")
+#r2_2 = r2_score(y_vals_2, y_vals_guessed_at_2)
+plt.title("Guessed Log Y Values vs X Values 0-31") #r^2 = {}".format(round(r2_2, 2)))
 plt.xlabel("Time (Hours)")
 plt.ylabel("log(bacterial concentration) (CFU/ml)")
 
@@ -225,10 +233,25 @@ bacterial_result = [x[0] for x in result_1] # so that we have just the bacterial
 plt.figure()
 plt.plot(t[:956], bacterial_result[:956], label = "ODEINT") # so that we only plot until hours = 100
 plt.plot(x_vals, y_vals, 'ro', label='Original data', markersize=4)
+
+# corresponding_y_vals = {}
+# cor_y_v = []
+# for x in set(x_vals):    
+#     corresponding_y_vals[x] = bacterial_result[int(x*10-40)]
+#     y = len([f for f in x_vals if f == x])
+#     cor_y_v += [corresponding_y_vals[x]] * y                         
+# r2_3 = r2_score(y_vals, cor_y_v)
+
 plt.xlabel("Time (Hours)")
 plt.ylabel("Bacteria Population (CFU/ml)")
 plt.title("ODEINT Model over Original Data")
 
+# new_x_val = []
+# for i, x in enumerate(x_vals):
+#     new_x_val.append(x)
+#     if x in list(x_vals[0:i]):
+#         new_x_val[i] = x + 0.001 * random.random()
+# new_x_vals = np.asarray(new_x_val)
 
 # Fitting a 5th order polynomial
 # creating our 52 x 6 matrix to apply least square regression to.
@@ -246,9 +269,11 @@ plt.figure()
 plt.plot(x_vals, y_vals, 'ro', label='Original data', markersize=4)
 plt.plot(xplot, g+b*xplot+c*xplot**2+d*xplot**3+e*xplot**4+f*xplot**5, 'b', label='Fitted line')
 plt.legend(loc=1)
+#y_val_poly_5 = [g+b*t+c*t**2+d*t**3+e*t**4+f*t**5 for t in x_vals]
+#r2_4 = r2_score(y_vals, y_val_poly_5)
 plt.xlabel("Time (Hours)")
 plt.ylabel("Bacteria Population (CFU/ml)")
-plt.title("5th-Order Polynomial Fit on Data")
+plt.title("5th-Order Polynomial Fit on Data") # r^2: {}".format(round(r2_4,3)))
 plt.show()
 
 
@@ -262,9 +287,11 @@ plt.figure()
 plt.plot(x_vals, y_vals, 'ro', label='Original data', markersize=4)
 plt.plot(xplot, a2+b2*xplot+c2*xplot**2+d2*xplot**3+e2*xplot**4+f2*xplot**5+g2*xplot**6+h2*xplot**7+i2*xplot**8+j2*xplot**9+k2*xplot**10, 'b', label='Fitted line')
 plt.legend(loc=1)
+#y_val_poly_10 = [a2+b2*xplot+c2*xplot**2+d2*xplot**3+e2*xplot**4+f2*xplot**5+g2*xplot**6+h2*xplot**7+i2*xplot**8+j2*xplot**9+k2*xplot**10 for xplot in x_vals]
+#r2_5 = r2_score(y_vals, y_val_poly_10)
 plt.xlabel("Time (Hours)")
 plt.ylabel("Bacteria Population (CFU/ml)")
-plt.title("10th-Order Polynomial Fit on Data")
+plt.title("10th-Order Polynomial Fit on Data") # r^2: {}".format(round(r2_5,3)))
 plt.show()
 
 # We did 5th order and 10th order just to show that both did poorly outside of the data range.
@@ -273,6 +300,8 @@ plt.show()
 # Plotting Extrapolation Graphs
 # This first figure is our ODEINT model (over 150 hours) over our original data points to see if it behaves reasonably
 # beyond the scope of our given data domain.
+
+
 plt.figure()
 plt.plot(t, bacterial_result, label = "ODEINT")
 plt.plot(x_vals, y_vals, 'ro', label='Original data', markersize=4)
